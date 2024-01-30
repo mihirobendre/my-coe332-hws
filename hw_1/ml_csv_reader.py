@@ -2,6 +2,7 @@ import json
 import pprint
 import numpy as np
 import math
+import csv
 
 def summary_stats(a_list_of_dicts, a_key_string):
     total_mass = 0.0
@@ -21,11 +22,21 @@ def summary_stats(a_list_of_dicts, a_key_string):
     print("Mean:", mean_mass)
     print("Median:", median_val)
 
-with open('Meteorite_Landings.json', 'r') as f:
-    ml_data = json.load(f)
+data = {}
+data['meteorite_landings'] = []
 
-pprint.pprint(ml_data)
+with open('Meteorite_Landings.csv', 'r') as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        data['meteorite_landings'].append(dict(row))
 
-summary_stats(ml_data['meteorite_landings'], 'mass (g)')
+#pprint.pprint(data)
+
+summary_stats(data['meteorite_landings'], 'mass (g)')
+
+
+
+
+
 
 

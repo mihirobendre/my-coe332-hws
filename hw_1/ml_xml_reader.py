@@ -2,6 +2,8 @@ import json
 import pprint
 import numpy as np
 import math
+import csv
+import xmltodict
 
 def summary_stats(a_list_of_dicts, a_key_string):
     total_mass = 0.0
@@ -21,11 +23,20 @@ def summary_stats(a_list_of_dicts, a_key_string):
     print("Mean:", mean_mass)
     print("Median:", median_val)
 
-with open('Meteorite_Landings.json', 'r') as f:
-    ml_data = json.load(f)
 
-pprint.pprint(ml_data)
+with open('Meteorite_Landings.xml', 'r') as f:
+    data = xmltodict.parse(f.read())
 
-summary_stats(ml_data['meteorite_landings'], 'mass (g)')
+pprint.pprint(data)
+
+#print(data['data']['meteorite_landings'][0])
+
+summary_stats(data['data']['meteorite_landings'], 'mass_g')
+
+
+
+
+
+
 
 
