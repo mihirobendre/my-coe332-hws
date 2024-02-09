@@ -2,6 +2,13 @@ import csv
 import pprint
 import math
 import numpy as np
+import gcd_algorithm
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+
 
 #function definitions:
 
@@ -41,33 +48,51 @@ def remove_nulls(a_list_of_dicts, a_key_string):
 
 #Distance Calculation Algorithm
 
+def calculate_distance_between_sites(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """
+
+    This function calculates the great-circle distance between two geographical coordinates.
+
+    Arguments:
+        lat1: Latitude of the first location.
+        lon1: Longitude of the first location.
+        lat2: Latitude of the second location.
+        lon2: Longitude of the second location.
+
+    Returns:
+        Great-circle distance between the two locations in kilometers.
+    """
+    return calculate_great_circle_distance(lat1, lon1, lat2, lon2)
+
+def main():
+
+	data = {}
+	data['meteorite_landings'] = []
 
 
-data = {}
-data['meteorite_landings'] = []
-
-
-with open('Meteorite_Landings_20240206.csv', 'r') as f:
-	reader = csv.DictReader(f)
-	for row in reader:
-		data['meteorite_landings'].append(dict(row))
+	with open('Meteorite_Landings_20240206.csv', 'r') as f:
+		reader = csv.DictReader(f)
+		for row in reader:
+			data['meteorite_landings'].append(dict(row))
 
 
 
-cleaned_data = remove_nulls(data['meteorite_landings'], 'mass (g)')
+	cleaned_data = remove_nulls(data['meteorite_landings'], 'mass (g)')
 
-ori_len = len(data['meteorite_landings'])
-new_len = len(cleaned_data)
+	ori_len = len(data['meteorite_landings'])
+	new_len = len(cleaned_data)
 
-summary_stats(cleaned_data, 'mass (g)')
+	summary_stats(cleaned_data, 'mass (g)')
 
-#print("Original length: ", ori_len)
-#print("New length: ", new_len)
+	print("Original length: ", ori_len)
+	print("New length: ", new_len)
 
-#print("Diff: ", ori_len - new_len)
+	print("Diff: ", ori_len - new_len)
 
-#if __name__ == '__main__':
-#    main()
+	print("Distance between first two points:")
+
+if __name__ == '__main__':
+    main()
 
 #pprint.pprint(data)
 
