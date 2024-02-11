@@ -4,6 +4,7 @@ import math
 import numpy as np
 from gcd_algorithm import calculate_great_circle_distance
 import logging
+import socket
 
 #configure logging
 logging.basicConfig(level='DEBUG')
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 #function definitions:
 
-def summary_stats(a_list_of_dicts: list, a_key_string: str):
+def summary_stats(a_list_of_dicts: list, a_key_string: str) -> dict:
      
     """
     Calculates the mean and median of numerical values corresponding to a specified key
@@ -30,23 +31,34 @@ def summary_stats(a_list_of_dicts: list, a_key_string: str):
     
     total = 0.0
     list_of_all_values = []
-	
     for i in range(len(a_list_of_dicts)):
         total += float(a_list_of_dicts[i][a_key_string])
         list_of_all_values.append(float(a_list_of_dicts[i][a_key_string]))
-
-    #print(list_of_all_values)
+    
+    logger.debug("Values after for loop: ")
+    logger.debug("Total: " + str(total))
+    logger.debug("List of all: " + str(list_of_all_values))
     length = len(list_of_all_values)
 
+    # if length is even
     if length % 2 == 0:
-    	median_val = (list_of_all_values[math.floor(length/2)] + list_of_all_values[math.floor(length / 2)]) / 2.0
-    else:
-    	median_val = list_of_all_values[math.floor(length / 2)]
- 
-    mean_val = (total / len(a_list_of_dicts))
-    print("Mean:", mean_val)
-    print("Median:", median_val)
+        # then calculate median as average of 2 middle values
+        median_val = (list_of_all_values[math.floor(float(length)/2-1)] + list_of_all_values[math.floor(float(length) / 2)]) / 2.0
 
+    else:
+        # calculate median as just middle value
+        median_val = list_of_all_values[math.floor(length / 2)]
+ 
+    # calculation of mean
+    mean_val = (total / len(a_list_of_dicts))
+
+    # Logging mean and median
+    logger.debug("Mean: %s" % mean_val)
+    logger.debug("Median: %s" % median_val)
+
+    result = {"Mean":mean_val, "Median":median_val}
+    
+    return result
 
 def remove_nulls(a_list_of_dicts: list, a_key_string: str) -> list:
 	
@@ -70,15 +82,18 @@ def remove_nulls(a_list_of_dicts: list, a_key_string: str) -> list:
     for i in range(len(a_list_of_dicts)):
         current_dict = a_list_of_dicts[i]
         converted = True
-        try:
-            float_val = float(a_list_of_dicts[i][a_key_string])
-        except ValueError:
+        if current_dict[a_key_string] == None:
             converted = False
+        else:
+            try:
+                float_val = float(a_list_of_dicts[i][a_key_string])
+            except ValueError:
+                logger.info("Index %s of input dict, string not convertable to float" %i)
+                converted = False
         if converted == True:
             new_list_of_dicts.append(current_dict)
-    
+        
     return new_list_of_dicts
-    #pprint.pprint(new_list_of_dicts)
 
 #Distance Calculation Algorithm
 
@@ -104,12 +119,17 @@ def calculate_distance(a_list_of_dicts: list, lat_key_string: str, long_key_stri
         float: The great-circle distance between the two geographical coordinates 
         in kilometers.
     """
-
+    # retreiving coordinates from list of dicts
     lat1 = float(a_list_of_dicts[point_1_index][lat_key_string])
-    #print(lat1)
     long1 = float(a_list_of_dicts[point_1_index][long_key_string])
     lat2 = float(a_list_of_dicts[point_2_index][lat_key_string])
     long2 = float(a_list_of_dicts[point_2_index][long_key_string])
+    logger.debug("Coordinates retreived from provided list of dicts: ")
+    logger.debug("lat1: " + str(lat1))
+    logger.debug("long1: " + str(long1))
+    logger.debug("lat2: " + str(lat2))
+    logger.debug("long2: " + str(long2))
+
     return calculate_great_circle_distance(lat1, long1, lat2, long2)
 
 def main():
@@ -124,27 +144,28 @@ def main():
     	
     cleaned_data = remove_nulls(data['meteorite_landings'], 'mass (g)')
     
-    ori_len = len(data['meteorite_landings'])
-    new_len = len(cleaned_data)
+    #ori_len = len(data['meteorite_landings'])
+    #new_len = len(cleaned_data)
 
     #pprint.pprint(cleaned_data)
-    
-    #summary_stats(cleaned_data, 'mass (g)')
+   
+    print(summary_stats(cleaned_data, 'mass (g)'))
+
 	
-    print("Original length: ", ori_len)
-    print("New length: ", new_len)
+#    print("Original length: ", ori_len)
+#    print("New length: ", new_len)
 	
-    print("Diff: ", ori_len - new_len)
+#    print("Diff: ", ori_len - new_len)
 	
     distance = calculate_distance(data['meteorite_landings'], 'reclat', 'reclong', 0, 1)
 
     print("Distance between first two points:", distance)
 
 
+
 if __name__ == '__main__':
     main()
 
 #pprint.pprint(data)
-
 
 
