@@ -7,8 +7,8 @@ RUN apt-get update && \
 
 RUN pip3 install pytest==8.0.0
 
-COPY ml_data_analysis.py /code/ml_data_analysis.py
+COPY ml_data_analysis.py ml_data_analysis.py
 
-RUN chmod +rx /code/ml_data_analysis.py
+RUN chmod +rx ml_data_analysis.py
 
 ENV PATH="/code:$PATH"
