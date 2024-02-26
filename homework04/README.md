@@ -45,3 +45,5 @@ Closest value's index: Index of the closest velocity data point.
 Instantaneous speed: Speed calculated from the closest velocity data point.
 Average speed of ISS: Average speed calculated from all velocity data points.
 The output provides insights into the velocity patterns of the ISS, helping to understand its movement in space.
+
+Created using the help of ChatGPT
