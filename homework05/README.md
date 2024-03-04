@@ -27,6 +27,8 @@ To build and run the container for this code, follow these steps:
 4. **Run the Container**: Once the container is built, you can run it using the following command:
    ```bash
    docker run -it iss-velocity-analysis
+5. Run the flask app, using python3 iss_tracker.py
+6. Copy the link and curl it from another terminal, testing various commands. 
 
 After running the container, the Python3 script will be executed, and various metrics related to the velocity of the ISS will be displayed in the console. Refer to the "Output and Interpretation" section for details on what to expect from the output.
 
