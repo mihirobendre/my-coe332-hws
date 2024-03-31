@@ -1,7 +1,7 @@
 # Analyzing NASA's Meteorite Landings Dataset
 
 ## Project Objective
-This project aims to provide functions to analyze data from The HUGO Gene Nomenclature Committee's gene dataset. By processing and analyzing this data, researchers and enthusiasts can gain insights into the distribution and characteristics of gene data, contributing to our understanding of human genomes.
+This project aims to provide functions to analyze data from The NASA's meteorite dataset. By processing and analyzing this data, researchers and enthusiasts can gain insights into the distribution and characteristics of the data, contributing to our understanding of space exploration.
 
 ## Folder Contents
 - `gcd_algorithm.py`: Contains the function for calculating the great circle distance algorithm.
