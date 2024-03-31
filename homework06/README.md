@@ -12,7 +12,7 @@ This project aims to provide functions to analyze data from The HUGO Gene Nomenc
 
 ## Description of Data
 
-The [Human Genome Nomenclature Committee (HGNC) dataset](https://www.genenames.org/download/archive/) provides comprehensive information about human genes approved by the HGNC. Each entry in the dataset corresponds to a unique gene and contains various attributes describing its properties and associations. Here's a description of the columns included in the dataset:
+The [Human Genome Nomenclature Committee (HGNC) dataset](https://www.genenames.org/download/archive/) (citation below) provides comprehensive information about human genes approved by the HGNC. Each entry in the dataset corresponds to a unique gene and contains various attributes describing its properties and associations. Here's a description of the columns included in the dataset:
 
 | Column Name              | Description                                                                                         |
 |--------------------------|-----------------------------------------------------------------------------------------------------|
@@ -68,7 +68,11 @@ The [Human Genome Nomenclature Committee (HGNC) dataset](https://www.genenames.o
 | mane_select              | NCBI and Ensembl transcript IDs/acessions including the version number for one high-quality representative transcript per protein-coding gene that is well-supported by experimental data and represents the biology of the gene. The IDs are delimited by |. |
 
 
-The dataset is sourced from HUGO Gene Nomenclature Committee's gene dataset. It does not need to be to be downloaded from their website, as it is pulled and parsed using the `requests` and `json` libraries.
+The data does not need to be to be downloaded separately, as it is pulled and parsed using the `requests` and `json` libraries. 
+
+Citation:
+HGNC. (2022). HGNC Dataset [Data file]. Retrieved from https://www.genenames.org/download/archive/
+
 
 ## Instructions to build a new image from your Dockerfile
 - Build a docker image from your Dockerfile: `docker build -t gene_api .`
