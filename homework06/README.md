@@ -15,7 +15,7 @@ This project aims to provide functions to analyze data from The HUGO Gene Nomenc
 
 ## Instructions to build a new image from your Dockerfile
 - Build a docker image from your Dockerfile: `docker build -t gene_api .`
-- Run the docker app: `docker run --rm -u $(id -u):$(id -g) -p 6379:6379 -d -v $PWD/data:/data redis:7 --save 1 1`
+- Run the docker redis server: `docker run --rm -u $(id -u):$(id -g) -p 6379:6379 -d -v $PWD/data:/data redis:7 --save 1 1`
 - Transfer ownership of data folder from root to ubuntu: `sudo chown ubuntu:ubuntu data/`
 
 ## Instructions to launch the containerized app and Redis using docker-compose
