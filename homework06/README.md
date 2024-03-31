@@ -10,8 +10,65 @@ This project aims to provide functions to analyze data from The HUGO Gene Nomenc
 - `docker-compose.yml`: Contains instructions for composing the docker container, and starting/closing it.
 - `requirements.txt`: Lists required packages and versions.
 
-## Obtaining Data
-- The dataset is sourced from HUGO Gene Nomenclature Committee's gene dataset. It does not need to be to be downloaded from their website, as it is pulled and parsed using the `requests` and `json` libraries.
+## Description of Data
+
+The Human Genome Nomenclature Committee (HGNC) dataset provides comprehensive information about human genes approved by the HGNC. Each entry in the dataset corresponds to a unique gene and contains various attributes describing its properties and associations. Here's a description of the columns included in the dataset:
+
+| Column Name              | Description                                                                                         |
+|--------------------------|-----------------------------------------------------------------------------------------------------|
+| hgnc_id                  | HGNC ID. A unique ID created by the HGNC for every approved symbol.                                 |
+| symbol                   | The HGNC approved gene symbol. Equates to the "APPROVED SYMBOL" field within the gene symbol report. |
+| name                     | HGNC approved name for the gene. Equates to the "APPROVED NAME" field within the gene symbol report. |
+| locus_group              | A group name for a set of related locus types as defined by the HGNC (e.g. non-coding RNA).         |
+| locus_type               | The locus type as defined by the HGNC (e.g. RNA, transfer).                                          |
+| status                   | Status of the symbol report, which can be either "Approved" or "Entry Withdrawn".                    |
+| location                 | Cytogenetic location of the gene (e.g. 2q34).                                                        |
+| location_sortable        | Same as "location" but single digit chromosomes are prefixed with a 0 enabling them to be sorted.   |
+| alias_symbol             | Other symbols used to refer to this gene as seen in the "SYNONYMS" field in the symbol report.       |
+| alias_name               | Other names used to refer to this gene as seen in the "SYNONYMS" field in the gene symbol report.    |
+| prev_symbol              | Symbols previously approved by the HGNC for this gene. Equates to the "PREVIOUS SYMBOLS & NAMES" field within the gene symbol report. |
+| prev_name                | Gene names previously approved by the HGNC for this gene. Equates to the "PREVIOUS SYMBOLS & NAMES" field within the gene symbol report. |
+| gene_family              | Name given to a gene family or group the gene has been assigned to. Equates to the "GENE FAMILY" field within the gene symbol report. |
+| gene_family_id           | ID used to designate a gene family or group the gene has been assigned to.                          |
+| date_approved_reserved   | The date the entry was first approved.                                                              |
+| date_symbol_changed      | The date the gene symbol was last changed.                                                          |
+| date_name_changed        | The date the gene name was last changed.                                                            |
+| date_modified            | Date the entry was last modified.                                                                   |
+| entrez_id                | Entrez gene ID. Found within the "GENE RESOURCES" section of the gene symbol report.                |
+| ensembl_gene_id          | Ensembl gene ID. Found within the "GENE RESOURCES" section of the gene symbol report.                |
+| vega_id                  | Vega gene ID. Found within the "GENE RESOURCES" section of the gene symbol report.                   |
+| ucsc_id                  | UCSC gene ID. Found within the "GENE RESOURCES" section of the gene symbol report.                   |
+| ena                      | International Nucleotide Sequence Database Collaboration (GenBank, ENA and DDBJ) accession number(s). Found within the "NUCLEOTIDE SEQUENCES" section of the gene symbol report. |
+| refseq_accession         | RefSeq nucleotide accession(s). Found within the "NUCLEOTIDE SEQUENCES" section of the gene symbol report. |
+| ccds_id                  | Consensus CDS ID. Found within the "NUCLEOTIDE SEQUENCES" section of the gene symbol report.        |
+| uniprot_ids              | UniProt protein accession. Found within the "PROTEIN RESOURCES" section of the gene symbol report. |
+| pubmed_id                | Pubmed and Europe Pubmed Central PMID(s).                                                            |
+| mgd_id                   | Mouse genome informatics database ID. Found within the "HOMOLOGS" section of the gene symbol report. |
+| rgd_id                   | Rat genome database gene ID. Found within the "HOMOLOGS" section of the gene symbol report.        |
+| lsdb                     | The name of the Locus Specific Mutation Database and URL for the gene separated by a | character.    |
+| cosmic                   | Symbol used within the Catalogue of somatic mutations in cancer for the gene.                        |
+| omim_id                  | Online Mendelian Inheritance in Man (OMIM) ID.                                                       |
+| mirbase                  | miRBase ID.                                                                                         |
+| homeodb                  | Homeobox Database ID.                                                                               |
+| snornabase               | snoRNABase ID.                                                                                      |
+| bioparadigms_slc         | Symbol used to link to the SLC tables database at bioparadigms.org for the gene.                    |
+| orphanet                 | Orphanet ID.                                                                                        |
+| pseudogene.org           | Pseudogene.org.                                                                                     |
+| horde_id                 | Symbol used within HORDE for the gene.                                                              |
+| merops                   | ID used to link to the MEROPS peptidase database.                                                    |
+| imgt                     | Symbol used within international ImMunoGeneTics information system.                                 |
+| iuphar                   | The objectId used to link to the IUPHAR/BPS Guide to PHARMACOLOGY database.                         |
+| kznf_gene_catalog        | ID used to link to the Human KZNF Gene Catalog.                                                      |
+| mamit-trnadb             | ID to link to the Mamit-tRNA database.                                                              |
+| cd                       | Symbol used within the Human Cell Differentiation Molecule database for the gene.                   |
+| lncrnadb                 | lncRNA Database ID.                                                                                 |
+| enzyme_id                | ENZYME EC accession number.                                                                         |
+| intermediate_filament_db | ID used to link to the Human Intermediate Filament Database.                                         |
+| agr                      | The HGNC ID that the Alliance of Genome Resources (AGR) have linked to their record of the gene. Use the HGNC ID to link to the AGR. |
+| mane_select              | NCBI and Ensembl transcript IDs/acessions including the version number for one high-quality representative transcript per protein-coding gene that is well-supported by experimental data and represents the biology of the gene. The IDs are delimited by |. |
+
+
+The dataset is sourced from HUGO Gene Nomenclature Committee's gene dataset. It does not need to be to be downloaded from their website, as it is pulled and parsed using the `requests` and `json` libraries.
 
 ## Instructions to build a new image from your Dockerfile
 - Build a docker image from your Dockerfile: `docker build -t gene_api .`
