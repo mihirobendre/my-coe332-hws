@@ -12,7 +12,7 @@ This project aims to provide functions to analyze data from The HUGO Gene Nomenc
 
 ## Description of Data
 
-The Human Genome Nomenclature Committee (HGNC) dataset provides comprehensive information about human genes approved by the HGNC. Each entry in the dataset corresponds to a unique gene and contains various attributes describing its properties and associations. Here's a description of the columns included in the dataset:
+The [Human Genome Nomenclature Committee (HGNC) dataset](https://www.genenames.org/download/archive/) provides comprehensive information about human genes approved by the HGNC. Each entry in the dataset corresponds to a unique gene and contains various attributes describing its properties and associations. Here's a description of the columns included in the dataset:
 
 | Column Name              | Description                                                                                         |
 |--------------------------|-----------------------------------------------------------------------------------------------------|
