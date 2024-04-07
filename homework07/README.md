@@ -106,7 +106,7 @@ Note: the environment variable in the Dockerfile is currently called to be 'redi
 
 ## Instructions and Examples for Jobs-API (query commands w/ expected outputs):
 
-First, use this POST method to add a new job to the queue, which also shows the job's current status and values. Utilizes "hgnc_id" and "name" (required) parameters:
+First, use this POST method to add a new job to the queue, which also shows the job's current status and values. The program is currently only capable of handling the "hgnc_id" and "name" (required) parameters, which can take any value (replace '1' and '2' with arbitrary values of your choosing):
 - `curl localhost:5000/jobs -X POST -d '{"hgnc_id":1, "name":2}' -H "Content-Type: application/json"`
 - Example output: `{
   "hgnc_id": 1,
@@ -115,7 +115,7 @@ First, use this POST method to add a new job to the queue, which also shows the 
   "status": "submitted"
 }`
 
-Now, use this GET method along with the specific <jobid> you just received, which is "id" from the above response. This shows the current information for specific <jobid>:
+Now, use this GET method along with the specific <jobid> you just received (replace <jobid> with the "id" you received above):
 - `curl localhost:5000/jobs/<jobid>`
 - Example Output: `{
   "hgnc_id": 1,
@@ -125,7 +125,7 @@ Now, use this GET method along with the specific <jobid> you just received, whic
 
 }`
 
-Finally, use this GET method to show all the running jobs' ids:
+Finally, use this GET method to show all the running jobs ids:
 - `curl localhost:5000/jobs`
 - Example output: 
 `["6543cfad-94fb-42d0-be89-80e6e836ac1d", "592e39bd-81cf-4f94-9152-700d004fa263", "33c8d95a-fe64-4b0f-b9fe-5ba6df76abc1", "cd4f7a7d-16a9-4dec-89cb-fb21595f4da7", "de9d5aae-762a-4884-80cc-0ffa44af7837", "a6c4ecf3-845d-4bde-a67b-fc51a6f654a0", "38766745-9f55-409c-9ff3-f27585c594da", "78eb42d0-7b7b-44d5-ae51-7d4caa9e7c68", "654edc7d-ea4a-4904-b313-14fa1bb3f9cd", "1e78cdd8-757c-4b19-be19-1e2bc1433a52", "7a6b1bcd-8819-4edb-b2e3-77d099d3402c", "a68ec66f-9d7b-4dfa-aa7b-bf66bd891d03", "99994d99-dc8c-4b37-b6ce-4e9d86f6b5d4", "77b820e3-205e-40a4-80ee-f724cb958a83", "33b55189-f622-4f93-8fd4-4b673d4657e1", "34b2bec1-449d-4571-9337-2b7fb72181ce"]`
@@ -134,5 +134,7 @@ Finally, use this GET method to show all the running jobs' ids:
 ## Prerequisites
 Before getting started, please ensure that you have the following installed on your system:
 - Docker: Install Docker according to your operating system. You can find instructions on the [official Docker website](https://docs.docker.com/get-docker/).
+- Redis: enter the following in your CLI: `pip install redis`
+- Flask: enter the following in your CLI: `pip install flask`
 
 
