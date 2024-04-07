@@ -4,7 +4,7 @@ from flask import Flask, request
 import redis
 import json
 from typing import Union, List, Dict
-from jobs import add_job, get_job_by_id, rd
+from jobs import add_job, get_job_by_id, rd, return_all_jobids
 
 app = Flask(__name__)
 
@@ -105,11 +105,15 @@ def gene_info(hgnc_id: str) -> Union[str, None]:
         print("Failed to fetch data:", response.status_code)
         return None
 
-@app.route('/jobs', methods = ['POST'])
-def submit_job():
-    data = request.get_json()
-    job_dict = add_job(data['hgnc_id'], data['name'])
-    return job_dict
+@app.route('/jobs', methods = ['GET','POST'])
+def jobs_general():
+    if request.method == 'POST':
+        data = request.get_json()
+        job_dict = add_job(data['hgnc_id'], data['name'])
+        return job_dict
+    elif request.method == 'GET':
+        ret_string = return_all_jobids() + '\n'
+        return ret_string
 
 @app.route('/jobs/<jobid>', methods = ['GET'])
 def get_job(jobid):

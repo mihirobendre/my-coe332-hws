@@ -2,13 +2,17 @@
 # Analyzing HUGO Gene Nomenclature Committee dataset
 
 ## Project Objective
-This project aims to provide functions to analyze data from The HUGO Gene Nomenclature Committee's gene dataset. By processing and analyzing this data, researchers and enthusiasts can gain insights into the distribution and characteristics of gene data, contributing to our understanding of human genomes.
+This project aims to provide functions to analyze data from The HUGO Gene Nomenclature Committee's gene dataset. By processing and analyzing this data, researchers and enthusiasts can gain insights into the distribution and characteristics of gene data, contributing to our understanding of human genomes. 
+
+Building on the previous homework (homework06), this iteration (homework07) of the project has an added api endpoint called jobs, which has three new endpoint capabilities: /jobs with 'GET' and 'POST', and /jobs<jobid>. 
 
 ## Folder Contents
 - `gene_api.py`: Contains the main /data and /gene routes for getting, posting and deleting data, as well as retreiving general and specific gene information.
 - `Dockerfile`: Contains commands for creating container.
 - `docker-compose.yml`: Contains instructions for composing the docker container, and starting/closing it.
 - `requirements.txt`: Lists required packages and versions.
+- `jobs.py`: Contains specific functions for the /jobs endpoints
+
 
 ## Description of Data
 
@@ -80,10 +84,11 @@ HGNC. (2022). HGNC Dataset [Data file]. Retrieved from https://www.genenames.org
 - Transfer ownership of data folder from root to ubuntu: `sudo chown ubuntu:ubuntu data/`
 
 ## Instructions to launch the containerized app and Redis using docker-compose
-- `docker-compose up -d --build`: to start running the docker container (flask app + redis)
+- `docker-compose up --build -d`: to start running the docker container (flask app + redis)
 - `docker-compose down`: to stop docker container
 
-## Example API query commands and expected outputs in code blocks
+## Example Gene-API query commands and expected outputs in code blocks:
+
 - `curl localhost:5000/`: Outputs "Hello, world!"
 - `curl localhost:5000/data`: Outputs currently loaded data in database (initially, this should be empty "[]")
 - `curl -X GET localhost:5000/data`: Outputs currently loaded data in database (initially, this should be empty "[]")
@@ -94,6 +99,25 @@ HGNC. (2022). HGNC Dataset [Data file]. Retrieved from https://www.genenames.org
 
 `{"ucsc_id": "uc002lqw.5", "locus_group": "protein-coding gene", "ena": ["AF328787"], "mgd_id": ["MGI:1351646"], "symbol": "ABCA7", "locus_type": "gene with protein product", "name": "ATP binding cassette subfamily A member 7", "rgd_id": ["RGD:1303134"], "iuphar": "objectId:762", "prev_name": ["ATP-binding cassette, sub-family A (ABC1), member 7"], "gencc": "HGNC:37", "pubmed_id": [10873640, 11435699, 12917409], "mane_select": ["ENST00000263094.11", "NM_019112.4"], "gene_group_id": [805], "alias_symbol": ["ABCX"], "gene_group": ["ATP binding cassette subfamily A"], "_version_": 1794565469998415872, "vega_id": "OTTHUMG00000167547", "entrez_id": "10347", "uuid": "fafebd35-466b-4317-91a7-b5f4db4797fa", "date_name_changed": "2015-11-13", "location_sortable": "19p13.3", "location": "19p13.3", "status": "Approved", "ccds_id": ["CCDS12055"], "date_approved_reserved": "1999-06-11", "date_modified": "2023-01-20", "uniprot_ids": ["Q8IZY2"], "omim_id": ["605414"], "agr": "HGNC:37", "refseq_accession": ["NM_019112"], "ensembl_gene_id": "ENSG00000064687", "hgnc_id": "HGNC:37"}`
 
+## Example Jobs-API query commands and expected outputs in code blocks:
+
+- `curl localhost:5000/jobs`: GET method for jobs api, which returns all jobid's. Ex: 
+`["6543cfad-94fb-42d0-be89-80e6e836ac1d", "592e39bd-81cf-4f94-9152-700d004fa263", "33c8d95a-fe64-4b0f-b9fe-5ba6df76abc1", "cd4f7a7d-16a9-4dec-89cb-fb21595f4da7", "de9d5aae-762a-4884-80cc-0ffa44af7837", "a6c4ecf3-845d-4bde-a67b-fc51a6f654a0", "38766745-9f55-409c-9ff3-f27585c594da", "78eb42d0-7b7b-44d5-ae51-7d4caa9e7c68", "654edc7d-ea4a-4904-b313-14fa1bb3f9cd", "1e78cdd8-757c-4b19-be19-1e2bc1433a52", "7a6b1bcd-8819-4edb-b2e3-77d099d3402c", "a68ec66f-9d7b-4dfa-aa7b-bf66bd891d03", "99994d99-dc8c-4b37-b6ce-4e9d86f6b5d4", "77b820e3-205e-40a4-80ee-f724cb958a83", "33b55189-f622-4f93-8fd4-4b673d4657e1", "34b2bec1-449d-4571-9337-2b7fb72181ce"]`
+- `curl localhost:5000/jobs -X POST -d '{"hgnc_id":1, "name":2}' -H "Content-Type: application/json"`: POST method for jobs api, which adds job to the queue, and also shows its current status and values. Ex:
+`{
+  "hgnc_id": 1,
+  "id": "0db41abb-73c7-4e2d-beee-591f8594add3",
+  "name": 2,
+  "status": "submitted"
+}`
+- `curl localhost:5000/jobs/<jobid>`: GET method which shows the current information for specific jobid. Ex: 
+`{
+  "hgnc_id": 1,
+  "id": "0db41abb-73c7-4e2d-beee-591f8594add3",
+  "name": 2,
+  "status": "in progress"
+}`
+ 
 
 ## Prerequisites
 Before getting started, please ensure that you have the following installed on your system:

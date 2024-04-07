@@ -2,10 +2,12 @@ import json
 import uuid
 import redis
 from hotqueue import HotQueue
+import os
 
-#_redis_ip = os.environ.get('REDIS_IP', 'redis-db')
-_redis_ip = 'redis-db'
+_redis_ip = os.environ.get('REDIS_IP')
+#_redis_ip = 'redis-db'
 _redis_port = '6379'
+_list_of_jobs = []
 
 rd = redis.Redis(host=_redis_ip, port=6379, db=0)
 q = HotQueue("queue", host=_redis_ip, port=6379, db=1)
@@ -57,3 +59,11 @@ def update_job_status(jid, status):
         _save_job(jid, job_dict)
     else:
         raise Exception()
+
+def return_all_jobids():
+    keys = jdb.keys()
+    keys = [key.decode('utf-8') for key in keys]
+    json_keys = json.dumps(keys)
+    return json_keys
+
+
