@@ -109,7 +109,17 @@ def gene_info(hgnc_id: str) -> Union[str, None]:
 def jobs_general():
     if request.method == 'POST':
         data = request.get_json()
-        job_dict = add_job(data['hgnc_id'], data['name'])
+
+        hgnc_id = None
+        name = None
+
+        try:
+            hgnc_id = data['hgnc_id']
+            name = data['name']
+        except KeyError:
+            return "The data doesn't contain parameters 'hgnc_id' or 'name'\n"
+        
+        job_dict = add_job(hgnc_id, name)
         return job_dict
     elif request.method == 'GET':
         ret_string = return_all_jobids() + '\n'
