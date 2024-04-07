@@ -1,14 +1,13 @@
-FROM python:3.10.12
-
-# Create /app directory
-RUN mkdir /app
+FROM python:3.10
 
 # Set working directory
 WORKDIR /app
 
-COPY requirements.txt /app/requirements.txt
+COPY requirements.txt ./ 
 RUN pip install -r requirements.txt
 
-COPY gene_api.py /app/gene_api.py
-CMD ["python3", "/app/gene_api.py"]
+COPY gene_api.py worker.py jobs.py ./
+#ENV REDIS_IP 'redis-db'
+
+CMD ["python3"]
 

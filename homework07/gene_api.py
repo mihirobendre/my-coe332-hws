@@ -108,7 +108,7 @@ def gene_info(hgnc_id: str) -> Union[str, None]:
 @app.route('/jobs', methods = ['POST'])
 def submit_job():
     data = request.get_json()
-    job_dict = add_job(data['start'], data['end'])
+    job_dict = add_job(data['hgnc_id'], data['name'])
     return job_dict
 
 @app.route('/jobs/<jobid>', methods = ['GET'])
