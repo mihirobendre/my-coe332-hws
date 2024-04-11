@@ -107,11 +107,11 @@ Note: the environment variable in the Dockerfile is currently called to be 'redi
 ## Instructions and Examples for Jobs-API (query commands w/ expected outputs):
 
 First, use this POST method to add a new job to the queue, which also shows the job's current status and values. The program is currently only capable of handling the "hgnc_id" and "name" (required) parameters, which can take any value (replace '1' and '2' with arbitrary values of your choosing):
-- `curl localhost:5000/jobs -X POST -d '{"hgnc_id":1, "name":2}' -H "Content-Type: application/json"`
+- `curl localhost:5000/jobs -X POST -d '{"hgnc_id":"HGNC:24206", "name":"biogenesis of lysosomal organelles complex 1 subunit 4"}' -H "Content-Type: application/json"`
 - Example output: `{
-  "hgnc_id": 1,
+  "hgnc_id": "HGNC:24206",
   "id": "0db41abb-73c7-4e2d-beee-591f8594add3",
-  "name": 2,
+  "name": "biogenesis of lysosomal organelles complex 1 subunit 4",
   "status": "submitted"
 }`
 
