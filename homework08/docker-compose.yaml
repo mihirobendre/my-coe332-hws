@@ -15,7 +15,7 @@ services:
         build:
             context: ./
             dockerfile: Dockerfile
-        command: ["python3", "gene_api.py"]
+        command: ["python3", "routes.py"]
         depends_on:
             - redis-db
         image: mihirobendre/jobs_flask_app:1.0

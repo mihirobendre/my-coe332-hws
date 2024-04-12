@@ -5,7 +5,6 @@ from hotqueue import HotQueue
 import os
 
 _redis_ip = os.environ.get('REDIS_IP')
-#_redis_ip = 'redis-db'
 _redis_port = '6379'
 _list_of_jobs = []
 
@@ -19,15 +18,15 @@ def _generate_jid():
     """
     return str(uuid.uuid4())
 
-def _instantiate_job(jid, status, hgnc_id, name):
+def _instantiate_job(jid, status, crime_type):
     """
     Create the job object description as a python dictionary. Requires the job id,
     status, start and end parameters.
     """
     return {'id': jid,
             'status': status,
-            'hgnc_id': hgnc_id,
-            'name': name }
+            'crime_type'=crime_type
+            }
 
 def _save_job(jid, job_dict):
     """Save a job object in the Redis database."""
@@ -39,10 +38,10 @@ def _queue_job(jid):
     q.put(jid)
     return
 
-def add_job(start, end, status="submitted"):
+def add_job(crime_type, status="submitted"):
     """Add a job to the redis queue."""
     jid = _generate_jid()
-    job_dict = _instantiate_job(jid, status, start, end)
+    job_dict = _instantiate_job(jid, status, crime_type)
     _save_job(jid, job_dict)
     _queue_job(jid)
     return job_dict

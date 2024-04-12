@@ -8,7 +8,12 @@ from jobs import add_job, get_job_by_id, rd, return_all_jobids
 
 app = Flask(__name__)
 
-rd: redis.Redis = redis.Redis(host='redis-db', port=6379, db=0)
+_redis_ip = os.environ.get('REDIS_IP')
+
+rd = redis.Redis(host=_redis_ip, port=6379, db=0)
+res = redis.Redis(host=_redis_ip, port = 6379, db = 3)
+
+url = "https://data.austintexas.gov/resource/fdj4-gpfu.json"
 
 @app.route('/', methods=['GET'])
 def hello_world() -> str:
@@ -29,13 +34,10 @@ def handle_data() -> Union[str, List[Dict[str, str]]]:
         Union[str, List[Dict[str, str]]]: Response message or data.
     """
     if request.method == 'POST':
-        # Get data from web
-        url = "https://g-a8b222.dd271.03c0.data.globus.org/pub/databases/genenames/hgnc/json/hgnc_complete_set.json"
         response = requests.get(url)
         if response.status_code == 200:
             # Parse the JSON response
-            full_data = response.json()
-            data = full_data["response"]["docs"]
+            data = response.json()
             my_id = 0
             for item in data:
                 rd.set(str(my_id), json.dumps(item))
@@ -56,51 +58,48 @@ def handle_data() -> Union[str, List[Dict[str, str]]]:
     else:
         return 'Not possible\n'
 
-@app.route('/gene', methods=['GET'])
-def all_genes() -> str:
+@app.route('/crimes', methods=['GET'])
+def all_crimes() -> str:
     """
-    Endpoint to retrieve information about all genes.
+    Endpoint to retrieve information about all crimes.
 
     Returns:
-        str: JSON formatted list of gene IDs.
+        str: JSON formatted list of crime IDs.
     """
     # Get data from web
-    url = "https://g-a8b222.dd271.03c0.data.globus.org/pub/databases/genenames/hgnc/json/hgnc_complete_set.json"
     response = requests.get(url)
-    list_of_genes = []
+    list_of_crimes = []
     if response.status_code == 200:
         # Parse the JSON response
-        full_data = response.json()
-        data = full_data["response"]["docs"]
+        data = response.json()
         for item in data:
-            list_of_genes.append(item["hgnc_id"])
-        return json.dumps(list_of_genes)
+            list_of_crimes.append(item["incident_report_number"])
+        return json.dumps(list_of_crimes)
     else:
         print("Failed to fetch data:", response.status_code)
 
-@app.route('/gene/<hgnc_id>', methods=['GET'])
-def gene_info(hgnc_id: str) -> Union[str, None]:
+@app.route('/crimes/<ir_num>', methods=['GET'])
+def crime_info(ir_num: str) -> Union[str, None]:
     """
-    Endpoint to retrieve information about a specific gene.
+    Endpoint to retrieve information about a specific crime.
 
     Args:
-        hgnc_id (str): HGNC ID of the gene.
+        incident_report_number (str): ID of the crime.
 
     Returns:
-        Union[str, None]: JSON formatted gene information or None if not found.
+        Union[str, None]: JSON formatted crime information or None if not found.
     """
     # Get data from web
-    url = "https://g-a8b222.dd271.03c0.data.globus.org/pub/databases/genenames/hgnc/json/hgnc_complete_set.json"
     response = requests.get(url)
     info_for_id = []
     if response.status_code == 200:
         # Parse the JSON response
-        full_data = response.json()
-        data = full_data["response"]["docs"]
+        data = response.json()
         for item in data:
-            if item["hgnc_id"] == hgnc_id:
+            if item["incident_report_number"] == ir_num:
                 info_for_id = json.dumps(item)
-        return info_for_id
+            return info_for_id
+
     else:
         print("Failed to fetch data:", response.status_code)
         return None
@@ -109,17 +108,15 @@ def gene_info(hgnc_id: str) -> Union[str, None]:
 def jobs_general():
     if request.method == 'POST':
         data = request.get_json()
-
-        hgnc_id = None
-        name = None
-
+        crime_type = None
+        # add more parameters here        
         try:
-            hgnc_id = data['hgnc_id']
-            name = data['name']
+            crime_type = data['crime_type']
+            # add more parameters here
         except KeyError:
-            return "The data doesn't contain parameters 'hgnc_id' or 'name'\n"
+            return "The data doesn't contain the parameter(s) you requested'\n"
         
-        job_dict = add_job(hgnc_id, name)
+        job_dict = add_job(crime_type)
         return job_dict
     elif request.method == 'GET':
         ret_string = return_all_jobids() + '\n'
@@ -134,25 +131,27 @@ def get_job(jobid):
 def calculate_result(jobid):
     # return computed outcome for that jobid
 
-    #get hgnc_id for respective jobid
-    hgnc_id = json.loads(get_job_by_id(jobid))["hgnc_id"]
+    #get crime_type for respective jobid
+    crime_type = json.loads(get_job_by_id(jobid))["crime_type"]
 
+    result = res.get("result") 
+
+'''
     #load dataset
-    url = "https://g-a8b222.dd271.03c0.data.globus.org/pub/databases/genenames/hgnc/json/hgnc_complete_set.json"
     response = requests.get(url)
     info_for_id = []
     if response.status_code == 200:
         # Parse the JSON response
-        full_data = response.json()
-        data = full_data["response"]["docs"]
+        data = response.json()
         for item in data:
-            if item["hgnc_id"] == hgnc_id:
+            if item["crime_type"] == crime_type:
                 info_for_id = json.dumps(item)
     else:
         print("Failed to fetch data:", response.status_code)
-    
-    # now, it's time to perform a computation
+'''
+    return result
 
+    # computation/work happens in worker
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port = 5000, debug = True)
