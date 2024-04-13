@@ -2,18 +2,14 @@
 # Analyzing Austin TX Crimes dataset
 
 ## Project Objective
-This project aims to provide functions to analyze data from The HUGO Gene Nomenclature Committee's gene dataset. By processing and analyzing this data, researchers and enthusiasts can gain insights into the distribution and characteristics of gene data, contributing to our understanding of human genomes. 
-
-Building on the previous homework (homework06), this iteration (homework07) of the project has an added api endpoint called jobs, which has three new endpoint capabilities: /jobs with 'GET' and 'POST', and /jobs<jobid>. 
 
 ## Folder Contents
-- `gene_api.py`: Contains the main /data and /gene routes for getting, posting and deleting data, as well as retreiving general and specific gene information. Also contains "front-end" commands for the /jobs endpoints.
+- `routes.py`: Contains the main /data and /gene routes for getting, posting and deleting data, as well as retreiving general and specific gene information. Also contains "front-end" commands for the /jobs endpoints.
 - `Dockerfile`: Contains commands for creating container.
 - `docker-compose.yml`: Contains instructions for composing the flask app container, worker contianer, and redis database. 
 - `requirements.txt`: Lists required packages and versions.
 - `jobs.py`: Contains the entire "back-end" of the jobs endpoint. 
 - `worker.py`: Contains the decorator and a simple function for launching the worker, to run each "job".
-
 
 ## Description of Data
 
@@ -33,11 +29,12 @@ Note: the environment variable in the Dockerfile is currently called to be 'redi
 
 - `curl localhost:5000/`: Outputs "Hello, world!"
 - `curl localhost:5000/data`: Outputs currently loaded data in database (initially, this should be empty "[]")
-- `curl -X GET localhost:5000/data`: Outputs currently loaded data in database (initially, this should be empty "[]")
-- `curl -X POST localhost:5000/data`: Posts HGNC data to redis database
+- `curl -X GET localhost:5000/data`: Same as the previous route.
+- `curl -X POST localhost:5000/data`: Posts dataset to redis database
 - `curl -X DELETE localhost:5000/data`: Deletes all data in database
-- `curl localhost:5000/crimes`: Returns list of all `hgnc_id`'s
-- `curl localhost:5000/crimes/<ir_num>`: Returns all info for the specific `ir_num`, or incident_report_number e.x. for `curl localhost:5000/crimes/"20212171325"` it returns:
+
+Data querying routes:
+- `curl localhost:5000/data/incident_report_number/<ir_num>`: Returns all info for the specific incident_report_numbers e.x. for `curl localhost:5000/crimes/"20212171325"` it returns:
 
 `{"incident_report_number": "20212171325", "crime_type": "THEFT", "ucr_code": "600", "family_violence": "N", "occ_date_time": "2021-06-07T10:24:00.000", "occ_date": "2021-06-07T00:00:00.000", "occ_time": "1024", "rep_date_time": "2021-06-07T10:24:00.000", "rep_date": "2021-06-07T00:00:00.000", "rep_time": "1024", "location_type": "RESIDENCE / HOME", "address": "500 BLOCK NATALI ST", "zip_code": "78748", "council_district": "2", "sector": "FR", "district": "3", "pra": "537", "census_tract": "24.37", "clearance_status": "N", "clearance_date": "2021-09-06T00:00:00.000", "ucr_category": "23H", "category_description": "Theft", "x_coordinate": "0", "y_coordinate": "0"}`
 
@@ -45,7 +42,7 @@ Note: the environment variable in the Dockerfile is currently called to be 'redi
 ## Instructions and Examples for Jobs-API (query commands w/ expected outputs):
 
 First, use this POST method to add a new job to the queue, which also shows the job's current status and values. The program is currently only capable of handling the "hgnc_id" and "name" (required) parameters, which can take any value (replace '1' and '2' with arbitrary values of your choosing):
-- `curl localhost:5000/jobs -X POST -d '{"hgnc_id":"HGNC:24206", "name":"biogenesis of lysosomal organelles complex 1 subunit 4"}' -H "Content-Type: application/json"`
+- `curl localhost:5000/jobs -X POST -d '{"crime_type":"THEFT"}' -H "Content-Type: application/json"`
 - Example output: `{
   "hgnc_id": "HGNC:24206",
   "id": "0db41abb-73c7-4e2d-beee-591f8594add3",
@@ -56,11 +53,10 @@ First, use this POST method to add a new job to the queue, which also shows the 
 Now, use this GET method along with the specific <jobid> you just received (replace <jobid> with the "id" you received above):
 - `curl localhost:5000/jobs/<jobid>`
 - Example Output: `{
-  "hgnc_id": 1,
+  "crime_type": 1,
   "id": "0db41abb-73c7-4e2d-beee-591f8594add3",
   "name": 2,
   "status": "in progress"
-
 }`
 
 Finally, use this GET method to show all the running jobs ids:
