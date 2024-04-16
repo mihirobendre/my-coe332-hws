@@ -13,7 +13,7 @@ services:
 
     flask-api:
         build:
-            context: ./
+            context: ./src
             dockerfile: Dockerfile
         command: ["python3", "gene_api.py"]
         depends_on:
@@ -25,7 +25,7 @@ services:
             - REDIS_IP=redis-db
     worker:
         build: 
-            context: ./
+            context: ./src
             dockerfile: Dockerfile
         command: ["python3", "worker.py"]
         depends_on:
