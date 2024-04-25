@@ -15,7 +15,7 @@
 
 
 ## Instructions to build a new image from your Dockerfile
-- Build a docker image from your Dockerfile: `docker build -t gene_api .`
+- Build a docker image from your Dockerfile: `docker build -t crime_api .`
 - Run the docker redis server: `docker run --rm -u $(id -u):$(id -g) -p 6379:6379 -d -v $PWD/data:/data redis:7 --save 1 1`
 - Transfer ownership of data folder from root to ubuntu: `sudo chown ubuntu:ubuntu data/`
 
@@ -34,10 +34,19 @@ Note: the environment variable in the Dockerfile is currently called to be 'redi
 - `curl -X DELETE localhost:5000/data`: Deletes all data in database
 
 Data querying routes:
-- `curl localhost:5000/data/incident_report_number/<ir_num>`: Returns all info for the specific incident_report_numbers e.x. for `curl localhost:5000/crimes/"20212171325"` it returns:
 
-`{"incident_report_number": "20212171325", "crime_type": "THEFT", "ucr_code": "600", "family_violence": "N", "occ_date_time": "2021-06-07T10:24:00.000", "occ_date": "2021-06-07T00:00:00.000", "occ_time": "1024", "rep_date_time": "2021-06-07T10:24:00.000", "rep_date": "2021-06-07T00:00:00.000", "rep_time": "1024", "location_type": "RESIDENCE / HOME", "address": "500 BLOCK NATALI ST", "zip_code": "78748", "council_district": "2", "sector": "FR", "district": "3", "pra": "537", "census_tract": "24.37", "clearance_status": "N", "clearance_date": "2021-09-06T00:00:00.000", "ucr_category": "23H", "category_description": "Theft", "x_coordinate": "0", "y_coordinate": "0"}`
+See all the available values of the following categories in the dataset (need to generalize in next iteration)
+- `curl localhost:5000/data/incident_report_numbers`
+- `curl localhost:5000/data/crime_types`
 
+Filter the data to view all data where a certain category meets given value (need to generalize in next iteration)
+- `curl localhost:5000/data/incident_report_number/<ir_num>`: Returns all data where the incident_report_number equals value <ir_num>
+  - e.x. `curl localhost:5000/crimes/20212171325` returns: `{"incident_report_number": "20212171325", "crime_type": "THEFT", "ucr_code": "600", "family_violence": "N", "occ_date_time": "2021-06-07T10:24:00.000", "occ_date": "2021-06-07T00:00:00.000", "occ_time": "1024", "rep_date_time": "2021-06-07T10:24:00.000", "rep_date": "2021-06-07T00:00:00.000", "rep_time": "1024", "location_type": "RESIDENCE / HOME", "address": "500 BLOCK NATALI ST", "zip_code": "78748", "council_district": "2", "sector": "FR", "district": "3", "pra": "537", "census_tract": "24.37", "clearance_status": "N", "clearance_date": "2021-09-06T00:00:00.000", "ucr_category": "23H", "category_description": "Theft", "x_coordinate": "0", "y_coordinate": "0"}`
+
+- `curl localhost:5000/data/crime_type/<crime_type>`: Returns all data where the crime_type equals value <crime_type>
+  - e.x. `curl localhost:5000/data/crime_type/PROTECTIVE%20ORDER` returns:
+  - [{"incident_report_number": "20135057728", "crime_type": "PROTECTIVE ORDER", "ucr_code": "3829", "family_violence": "N", "occ_date_time": "2013-12-17T09:26:00.000", "occ_date": "2013-12-17T00:00:00.000", "occ_time": "926", "rep_date_time": "2013-12-17T09:26:00.000", "rep_date": "2013-12-17T00:00:00.000", "rep_time": "926", "location_type": "RESIDENCE / HOME", "address": "UNKNOWN", "sector": "AD", "district": "4", "clearance_status": "N", "clearance_date": "2013-12-17T00:00:00.000"}, ... , {"incident_report_number": "20145027129", "crime_type": "PROTECTIVE ORDER", "ucr_code": "3829", "family_violence": "N", "occ_date_time": "2014-06-18T16:09:00.000", "occ_date": "2014-06-18T00:00:00.000", "occ_time": "1609", "rep_date_time": "2014-06-18T16:09:00.000", "rep_date": "2014-06-18T00:00:00.000", "rep_time": "1609", "location_type": "RESIDENCE / HOME", "address": "UNKNOWN", "sector": "ED", "district": "2", "clearance_status": "N", "clearance_date": "2014-06-18T00:00:00.000"}]
+ 
 
 ## Instructions and Examples for Jobs-API (query commands w/ expected outputs):
 
