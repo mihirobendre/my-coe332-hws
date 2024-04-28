@@ -78,7 +78,7 @@ Finally, once the results have been loaded, you can use this GET method to load 
 
 ## Software Diagram:
 
-![SW diagram](sw_diag.png)
+![SW diagram](sw_diagram.png)
 
 ## Prerequisites
 Before getting started, please ensure that you have the following installed on your system:
