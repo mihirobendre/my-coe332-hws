@@ -3,11 +3,15 @@ FROM python:3.10
 # Set working directory
 WORKDIR /app
 
-COPY requirements.txt ./ 
-RUN pip install -r requirements.txt
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y python3 python3-pip
 
-COPY routes.py worker.py jobs.py ./
-ENV REDIS_IP 'redis-db'
+COPY requirements.txt ./
+RUN pip3 install -r requirements.txt
+
+COPY /src .
+COPY /test .
 
 CMD ["python3"]
 

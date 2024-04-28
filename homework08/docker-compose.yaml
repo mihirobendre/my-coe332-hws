@@ -11,26 +11,30 @@ services:
         user: "1000:1000"
         command: [ "--save", "1", "1"]
 
-    flask-api:
+    api:
         build:
             context: ./
             dockerfile: Dockerfile
-        command: ["python3", "routes.py"]
+        command: ["python3", "api.py"]
         depends_on:
             - redis-db
-        image: mihirobendre/jobs_flask_app:1.0
+        image: mihirobendre/criminal_data_app:1.0
         ports:
             - 5000:5000
-        environment:          
+        entrypoint: python3 api.py
+        environment:
             - REDIS_IP=redis-db
+            - LOG_LEVEL=INFO
     worker:
-        build: 
+        build:
             context: ./
             dockerfile: Dockerfile
         command: ["python3", "worker.py"]
         depends_on:
             - redis-db
         image: mihirobendre/jobs_worker:1.0
+        entrypoint: python3 worker.py
         environment:
             - REDIS_IP=redis-db
+            - LOG_LEVEL=INFO
 
